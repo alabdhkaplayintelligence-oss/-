@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 */6 * * *' # يعمل تلقائياً كل 6 ساعات
+    - cron: '0 */6 * * *' # يعمل كل 6 ساعات
 
 jobs:
   run-bot:
@@ -18,10 +18,18 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Telethon
-        run: pip install telethon
+      - name: Install Dependencies
+        run: |
+          pip install telethon
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Start Bot
         run: |
-          chmod 666 bot_session.session
+          echo "Checking files in repository..."
+          ls -la
+          
+          # إعطاء صلاحيات للملف إذا كان موجوداً، وتخطي الخطأ إذا لم يوجد
+          [ -f bot_session.session ] && chmod 666 bot_session.session || echo "Warning: bot_session.session not found"
+          
+          echo "Starting Python script..."
           python main.py

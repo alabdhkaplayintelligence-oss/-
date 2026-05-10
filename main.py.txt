@@ -1,0 +1,51 @@
+import asyncio
+from datetime import datetime
+from telethon import TelegramClient
+
+# --- بياناتك الشخصية ---
+api_id = 31904882
+api_hash = '6652b99ce2b82ce0a6ad171a10cffb71'
+
+# --- المجموعات ---
+groups = [
+    'https://t.me/+j516Ji2W1hU3MmJi',
+    'https://t.me/Pes_80',
+    'https://t.me/+sefR7fE58QI1MWYy'
+]
+
+# --- النص الخام (الذي طلبته حرفياً) ---
+message_text = """متوووووووووووووووووووووووفر يوزرات 
+رباعيه حقيقيه مميزه و ليس ثغره 
+اليريد اعرضله لسته كامله بيه 20 يوزر
+------------------------------------------
+يوزرات تلي اساسي ( مميز )
+يفيد تحوله NFT
+o7_7i
+o4_4x"""
+
+async def start_posting():
+    # تأكد من رفع ملف الجلسة الذي ظهر في صورتك باسم test_session_v3.session
+    # أو سمه bot_session.session وارفعه مع الكود
+    async with TelegramClient('bot_session', api_id, api_hash) as client:
+        print("✅ البوت بدأ العمل بنجاح على السيرفر السحابي...")
+        
+        while True:
+            now = datetime.now()
+            # نهاراً كل دقيقة (60ث) | ليلاً كل 5 دقائق (300ث)
+            delay = 40 if 12 <= now.hour < 24 else 300
+
+            for group in groups:
+                try:
+                    await client.send_message(group, message_text)
+                    print(f"✔️ نُشر في: {group}")
+                    await asyncio.sleep(5)
+                except Exception as e:
+                    print(f"❌ خطأ: {e}")
+
+            await asyncio.sleep(delay)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(start_posting())
+    except Exception as e:
+        print(f"🚨 خطأ تقني: {e}")
